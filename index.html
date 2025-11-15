@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="icon" href="icon.jpg">
+        <title data-trans="title">Debate planner</title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="./styles.css">
+        <script src="languages.js"></script>
+        <script src="index.js"></script>
+    </head>
+    <body>
+        <div class="toolbar">
+            <div style="height:fit-content;width:fit-content;float:left;padding:10px;"><a href="." class="title" data-trans="title">Debate planner</a></div>
+            <div style="width:fit-content;display:flex;float:right;height:fit-content;padding:10px;">
+                <div tabindex="0">
+                    <span id="languageIcon" class="toolbar-option material-icons" style="font-size: 36px;">language</span>
+                </div>
+                <a class="toolbar-option" href="https://github.com/HalbFettKaese/debate-planner" target="_blank"><i class="fa fa-github" style="font-size:36px;"></i></a>
+            </div>
+        </div>
+        <table style="margin-left: 8px;">
+            <thead>
+                <tr>
+                    <th scope="col">
+                        <span style="float: left;" data-trans="government">Government</span>
+                    </th>
+                    <th scope="col">
+                        <span style="float: left;" data-trans="opposition">Opposition</span>
+                    </th>
+                    <th scope="col">
+                        <span style="float: left;" data-trans="free-speakers">Free Speakers</span>
+                    </th>
+                    <th scope="col">
+                        <span style="float: left;" data-trans="jury">Jury</span>
+                    </th>
+                </tr>
+            </thead>
+            <tr>
+                <td>
+                    <div class="group box" id="dropbox1">
+                    </div>
+                </td>
+                <td>
+                    <div class="group box" id="dropbox2">
+                        
+                    </div>
+                </td>
+                <td>
+                    <div class="group box" id="dropbox3">
+                        
+                    </div>
+                </td>
+                <td>
+                    <div class="group box" id="dropbox4">
+                        
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <th colspan="4">
+                    <span data-trans="unsorted" style="line-height: 1.94rem">Unsorted</span>
+                    <span style="float: right;margin-bottom:5px;">
+                        <div style="display:inline-flex;">
+                            <label height="" class="group_size_label right-hard">
+                                <span data-trans="group-size">Group size</span>
+                            </label><select class="group_size_dropdown left-hard" id="select">
+                                <option>1</option>
+                                <option>2</option>
+                                <option selected>3</option>
+                                <option>4</option>
+                                <option>5</option>
+                            </select>
+                        </div>
+                    </span>
+                </th>
+            </tr>
+            <tr>
+                <td colspan="4", style="padding-right:5px;">
+                    <div style="display:flex;width:100%;">
+                        <div class="random_group box right-hard" id="dropbox5">
+                        </div>
+                        <div style="display:flex;flex-direction:column;margin-top: -5px;">
+                            <button class="side-button left-hard bottom-hard" onclick="distribute()">
+                                <span class="material-icons">shuffle</span><br><span data-trans="distribute">Distribute</span>
+                            </button>
+                            <button class="side-button left-hard top-hard" onclick="retrieve()">
+                                <span class="material-icons">south_west</span><br><span data-trans="retrieve">Retrieve</span>
+                            </button>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </table>
+        <div style="margin-left:8px;display:flex;height:30px;width:200px;padding:2px;float:left;">
+            <input type="text" placeholder="Name" class="box" id="nameInput" style="font-family: 'Roboto', sans-serif;">
+        </div>
+        <span id="trash" class="material-icons trash">delete</span>
+
+        <script>
+            initialize();
+        </script>
+    </body>
+</html>
