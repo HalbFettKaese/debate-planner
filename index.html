@@ -2,7 +2,7 @@
 <html>
     <head>
         <meta charset="utf-8">
-        <link rel="icon" href="icon.jpg">
+        <link rel="icon" href="icon.png">
         <title data-trans="title">Debate planner</title>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
@@ -96,10 +96,13 @@
                 </td>
             </tr>
         </table>
-        <div style="margin-left:8px;display:flex;height:30px;width:200px;padding:2px;float:left;">
-            <input type="text" placeholder="Name" class="box" id="nameInput" style="font-family: 'Roboto', sans-serif;">
+        <div style="margin-left:10px;width: fit-content;display:flex;height:40px;">
+            <input type="text" placeholder="Name" class="box" id="nameInput" style="font-family: 'Roboto', sans-serif;float:left;">
+            <div class="box right-hard role-button-label" style="padding:10px;"><span data-trans="role-label">Role</span></div>
+            <button id="roleButton" class="side-button left-hard role-button" data-trans="role-regular">Regular</button>
+            <span id="trash" class="material-icons trash">delete</span>
         </div>
-        <span id="trash" class="material-icons trash">delete</span>
+        
 
         <script>
             initialize();

@@ -10,7 +10,10 @@ const languages = {
         "group-size": "Group size",
         "distribute": "Distribute",
         "retrieve": "Retrieve",
-        "confirm-trash-all": "Do you really want to delete all participants?"
+        "confirm-trash-all": "Do you really want to delete all participants?",
+        "role-regular": "Regular",
+        "role-beginner": "Beginner",
+        "role-label": "Role"
     },
     "de": {
         "lang_name": "Deutsch",
@@ -23,6 +26,9 @@ const languages = {
         "group-size": "Gruppengröße",
         "distribute": "Verteilen",
         "retrieve": "Sammeln",
-        "confirm-trash-all": "Möchtest du wirklich alle Teilnehmer löschen?"
+        "confirm-trash-all": "Möchtest du wirklich alle Teilnehmer löschen?",
+        "role-regular": "Normal",
+        "role-beginner": "Anfänger",
+        "role-label": "Rolle"
     }
 }

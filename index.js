@@ -4,16 +4,27 @@ let dragged = null;
 var nameInput;
 var placeholder;
 var selectedLanguage = null;
-var updateMembers;
+var allowSavingMembers;
+var roleButton;
 function initialize() {
     makePlaceholder();
+    
+    loadRoleButton();
 
-    ["dropbox1", "dropbox2", "dropbox3", "dropbox4", "dropbox5"]
-    .forEach((id, idx) => loadDropbox(id, idx));
+    [
+        "dropbox1", "dropbox2", "dropbox3", "dropbox4", "dropbox5"
+    ].forEach((id, idx) => loadDropbox(id, idx));
 
     nameInput = document.getElementById("nameInput");
-
-    nameInput.addEventListener("change", (t, e) => addParticipant());
+    nameInput.onkeydown = event => {
+        if (event.key === "Enter") {
+            let name = nameInput.value;
+            const role = parseInt(roleButton.dataset.currentRole);
+            addParticipant(name, role);
+            saveMembers();
+            nameInput.value = nameInput.defaultValue;
+        }
+    };
 
     loadTrash();
 
@@ -23,13 +34,7 @@ function initialize() {
 
     selectLanguage(selectedLanguage);
 
-    const memberList = JSON.parse(localStorage.getItem("members") || "[]");
-    updateMembers = false;
-    memberList.forEach(name => {
-        nameInput.value = name;
-        addParticipant();
-    });
-    updateMembers = true;
+    loadMembers();
 
     const dropdown = document.getElementById("select");
     const groupSize = parseInt(localStorage.getItem("groupSize") || "3");
@@ -39,6 +44,23 @@ function initialize() {
     dropdown.onchange = event => {
         localStorage.setItem("groupSize", dropdown.value);
     };
+}
+
+function loadRoleButton() {
+    roleButton = document.getElementById("roleButton");
+    roleButton.dataset.currentRole = 0;
+    roleButton.onclick = event => {
+        const newRole = (parseInt(roleButton.dataset.currentRole) + 1) % 2;
+        roleButton.dataset.currentRole = newRole;
+        if (newRole == "0") {
+            roleButton.classList.remove("role-button-beginner");
+            roleButton.dataset.trans = "role-regular";
+        } else {
+            roleButton.classList.add("role-button-beginner");
+            roleButton.dataset.trans = "role-beginner";
+        }
+        translateElement(roleButton);
+    }
 }
 
 function loadLanguageIcon() {
@@ -85,12 +107,13 @@ function selectLanguage(lang_id) {
     languages[lang_id]._option.classList.add("language-option-selected");
 
     const translatedElements = document.querySelectorAll("[data-trans]");
-    translatedElements.forEach(el => {
-        const translationKey = el.getAttribute("data-trans");
-        const translated = getTranslation(translationKey);
-        if (translated !== translationKey)
-            el.textContent = translated;
-    });
+    translatedElements.forEach(translateElement);
+}
+
+function translateElement(el) {
+    const translated = getTranslation(el.dataset.trans);
+    if (translated !== el.dataset.trans)
+        el.textContent = translated;
 }
 
 function getTranslation(langKey) {
@@ -112,11 +135,11 @@ function loadTrash() {
         trash.classList.remove("trash-selected");
     }
     trash.ondrop = event => {
-        delete participants[dragged.participantName];
+        delete participants[dragged.dataset.participantName];
         dragged.parentNode.removeChild(dragged);
         dragged = null;
         trash.classList.remove("trash-selected");
-        localStorage.setItem("members", JSON.stringify(Object.keys(participants)));
+        saveMembers();
     }
     trash.onclick = event => {
         var confirmMessage = getTranslation("confirm-trash-all");
@@ -130,6 +153,28 @@ function loadTrash() {
             }
         }
     }
+}
+
+function saveMembers() {
+    if (!allowSavingMembers) return;
+    const saved = [];
+    Object.keys(participants).forEach(name => {
+        saved.push([name, participants[name].dataset.role]);
+    });
+    localStorage.setItem("members", JSON.stringify(saved));
+    localStorage.setItem("membersDataFormat", 1);
+}
+
+function loadMembers() {
+    allowSavingMembers = false;
+    const membersDataFormat = parseInt(localStorage.getItem("membersDataFormat") || "0");
+    const membersList = JSON.parse(localStorage.getItem("members") || "[]");
+    if (membersDataFormat == 0) {
+        membersList.forEach(name => addParticipant(name, 0));
+    } else {
+        membersList.forEach(([name, role],) => addParticipant(name, role));
+    }
+    allowSavingMembers = true;
 }
 
 function makePlaceholder() {
@@ -177,24 +222,27 @@ function loadDropbox(id) {
     };
 }
 
-function addParticipant() {
-    let name = nameInput.value;
+function addParticipant(name, role) {
     if (name == "" || name in participants) {
         return;
     }
     console.log("Added participant " + name);
     const newElement = document.createElement("div");
-    const newContent = document.createTextNode(nameInput.value);
+    const newContent = document.createTextNode(name);
     newElement.appendChild(newContent);
     newElement.className = "participant";
     newElement.draggable = true;
-    newElement.participantName = name;
+    newElement.dataset.participantName = name;
+
+    newElement.dataset.role = role;
+    if (role == 1) {
+        newElement.classList.add("beginner-participant");
+    }
 
     participants[name] = newElement;
 
     const unsortedBox = boxes[4];
     unsortedBox.appendChild(newElement);
-    nameInput.value = nameInput.defaultValue;
 
     newElement.ondragstart = event => {
         dragged = newElement;
@@ -213,9 +261,6 @@ function addParticipant() {
             placeholder.parentNode.removeChild(placeholder);
         }
     };
-    if (updateMembers) {
-        localStorage.setItem("members", JSON.stringify(Object.keys(participants)));
-    }
 }
 
 function retrieve() {
@@ -238,31 +283,155 @@ function distribute() {
     }
     // Choose random permutation of unsorted members, and orphan all unassigned participants.
 
-    const permutation = [];
+    const beginners = [];
+    const normals = [];
+
     for (var i = 0; i < memberCounts[4]; i++) {
-        permutation.push(boxes[4].children[i]);
+        const node = boxes[4].children[i];
+        if (parseInt(node.dataset.role) == 0) {
+            normals.push(node);
+        } else {
+            beginners.push(node);
+        }
     }
     for (var i = 0; i < memberCounts[4]; i++) {
         boxes[4].removeChild(boxes[4].lastChild);
     }
-    shuffle(permutation);
+    shuffle(beginners);
+    shuffle(normals);
     
-    var remainingGroup1 = groupSize - memberCounts[0];
-    var remainingGroup2 = groupSize - memberCounts[1];
-    
-    while (remainingGroup1 > 0 || remainingGroup2 > 0) {
-        if (permutation.length == 0) return;
-        // Choose the smaller group if unequal, otherwise random
-        if (remainingGroup1 < remainingGroup2 + Math.random() - 0.5) {
-            boxes[1].appendChild(permutation.pop());
-            remainingGroup2--;
-        } else {
-            boxes[0].appendChild(permutation.pop());
-            remainingGroup1--;
+    var groupTotal1 = memberCounts[0];
+    var groupNormals1 = Array.from(boxes[0].children).filter(el => parseInt(el.dataset.role) == 0).length;
+    var groupTotal2 = memberCounts[1];
+    var groupNormals2 = Array.from(boxes[1].children).filter(el => parseInt(el.dataset.role) == 0).length;
+    // Distribute members of beginners and normals such that number of normals and totals is mostly equal
+    // First, try to mitigate any starting differences
+    // Mitigate differing normals count
+    function equalizeNormalCount() {
+        if (groupNormals1 == groupNormals2) // Nothing to do if already equal
+            return;
+        if (groupNormals1 < groupNormals2) {
+            while (groupTotal1 < groupSize && groupNormals1 < groupNormals2 && normals.length > 0) {
+                groupTotal1++;
+                groupNormals1++;
+                boxes[0].appendChild(normals.pop());
+            }
+            return;
+        }
+        while (groupTotal2 < groupSize && groupNormals2 < groupNormals1 && normals.length > 0) {
+            groupTotal2++;
+            groupNormals2++;
+            boxes[1].appendChild(normals.pop());
         }
     }
-    while (permutation.length > 0) {
-        boxes[2].appendChild(permutation.pop());
+    equalizeNormalCount();
+
+    // If group 1 and 2 have no normals and the unsorted only have one normal, always put the remainder into one of the groups
+    if (groupNormals1 == 0 && groupNormals2 == 0 && normals.length == 1) {
+        var targetGroup;
+        if (groupTotal1 < groupSize) {
+            if (groupTotal2 < groupSize) {
+                // Both groups have space, so add to random group
+                targetGroup = Math.random() < 0.5 ? 1 : 2;
+            } else {
+                // Group 1 has space, group 2 doesn't, so always add to group 1
+                targetGroup = 1;
+            }
+        } else {
+            if (groupTotal2 < groupSize) {
+                // Group 2 has space, group 1 doesn't, so always add to group 2
+                targetGroup = 2;
+            } else {
+                // No group has space, so skip
+                targetGroup = -1;
+            }
+        }
+        if (targetGroup == 1) {
+            groupNormals1 += 1;
+            groupTotal1 += 1;
+            boxes[0].appendChild(normals.pop());
+        } else if (targetGroup == 2) {
+            groupNormals2 += 1;
+            groupTotal2 += 1;
+            boxes[1].appendChild(normals.pop());
+        }
+    }
+    // Mitigate differing total counts
+    function equalizeTotalCount() {
+        if (groupTotal1 == groupTotal2) {
+            return;
+        }
+        if (groupTotal1 < groupTotal2) {
+            while (groupTotal1 < groupTotal2 && beginners.length > 0) {
+                groupTotal1 += 1;
+                boxes[0].appendChild(beginners.pop());
+            }
+            return;
+        }
+        while (groupTotal2 < groupTotal1 && beginners.length > 0) {
+            groupTotal2 += 1;
+            boxes[1].appendChild(beginners.pop());
+        }
+    }
+    equalizeTotalCount();
+    if (groupTotal1 != groupTotal2) {
+        console.log("Total group sizes are " + groupTotal1 + " and " + groupTotal2 + " when they should be equal at this point.");
+    }
+    // Now, both groups have equal members and (mostly) equal normals.
+    // Add pairs of one kind to both groups until groups are full or pairs are exhausted.
+    var beginnerPairCount = Math.floor(beginners.length / 2);
+    var normalPairCount = Math.floor(normals.length / 2);
+    while (beginnerPairCount + normalPairCount > 0 && groupTotal1 < groupSize) {
+        var diceRoll = Math.random() * (beginnerPairCount + normalPairCount);
+        var chooseBeginner = diceRoll < beginnerPairCount;
+        if (normalPairCount > 0 && (groupNormals1 == 0 || groupNormals2 == 0)) {
+            // Make sure there is at least one pair of normals to guide the beginners in each group
+            chooseBeginner = false;
+        }
+        if (chooseBeginner) {
+            // pick pair of beginners
+            boxes[0].appendChild(beginners.pop());
+            boxes[1].appendChild(beginners.pop());
+            beginnerPairCount--;
+        } else {
+            // pick pair of normals
+            boxes[0].appendChild(normals.pop());
+            boxes[1].appendChild(normals.pop());
+            normalPairCount--;
+            groupNormals1++;
+            groupNormals2++;
+        }
+        groupTotal1++;
+        groupTotal2++;
+    }
+    // Now either pairs are exhausted or groups are full.
+
+    if (groupTotal1 < groupSize) {
+        // Groups are not full, so pairs are exhausted.
+        // normals and beginners might still have each one member left.
+        var node1 = beginners.pop();
+        var node2 = normals.pop();
+        // Swap the two nodes randomly
+        if (Math.random() < 0.5) {
+            [node1, node2] = [node2, node1];
+        }
+        if (node1) {
+            boxes[0].appendChild(node1);
+        }
+        if (node2) {
+            boxes[1].appendChild(node2);
+        }
+    } else {
+        // Groups are full and there might be members left, so add the remaining members to be free speakers
+        while (beginners.length > 0) {
+            boxes[2].appendChild(beginners.pop());
+        }
+        while (normals.length > 0) {
+            boxes[2].appendChild(normals.pop());
+        }
+    }
+    if (beginners.length > 0 || normals.length > 0) {
+        console.log("(beginners, normals).length was", beginners.length, normals.length, "when both should be 0.");
     }
 }
 
@@ -277,8 +446,4 @@ function shuffle(arr) {
 
 function randint(min, max) {
     return Math.floor(Math.random() * (max - min) + min);
-}
-
-function onClickLanguageIcon() {
-
 }

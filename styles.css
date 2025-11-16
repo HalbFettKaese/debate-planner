@@ -22,8 +22,10 @@ td {
     margin-right: 5px;
     margin-bottom: 5px;
     background-color: rgb(70, 70, 70);
-    box-shadow: 1px 1px 5px black;
     border-radius: 5px;
+}
+.beginner-participant {
+    background-color: rgb(33, 115, 49);
 }
 .placeholder {
     margin-left: -0.7333px;
@@ -97,10 +99,10 @@ select {
     border-radius: 10px;
     height: 100%;
     border-width: 0;
-    border-color: green;
     margin-right: 6px;
     box-shadow: 1px 1px 5px black;
     font-family: "Roboto", sans-serif;
+    border-color: green;
     background-color: rgb(33, 140, 33);
     color:rgb(220, 220, 220);
 }
@@ -111,27 +113,10 @@ select {
     background-color: rgb(35, 124, 35);
 }
 
-.left-hard {
-    border-bottom-left-radius: 0px;
-    border-top-left-radius: 0px;
-}
-.right-hard {
-    border-bottom-right-radius: 0px;
-    border-top-right-radius: 0px;
-}
-.top-hard {
-    border-top-left-radius: 0px;
-    border-top-right-radius: 0px;
-    border-top-width: 1px;
-}
-.bottom-hard {
-    border-bottom-left-radius: 0px;
-    border-bottom-right-radius: 0px;
-}
-
 .trash {
     cursor: pointer;
-    margin-left: 3px;
+    margin-left: 5px;
+    margin-top: 2px;
     padding: 1px;
     border-radius: 3px;
     
@@ -152,6 +137,7 @@ select {
     color: #cbcbcb;
     font-weight: 600;
     z-index: 10;
+    padding-right: 10px;
 }
 
 .title {
@@ -162,7 +148,7 @@ select {
 }
 .toolbar-option {
     float: right;
-    margin-right: 10px;
+    margin-left: 20px;
     height: 36px;
     width: 36px;
     border: 0;
@@ -232,4 +218,52 @@ a {
 }
 .language-option-selected {
     color:rgb(113, 165, 224);
+}
+
+.role-button-label {
+    margin-left: 10px;
+    width: fit-content;
+    color:rgb(220, 220, 220);
+    background-color: rgb(50, 50, 50);
+    box-shadow: 1px 1px 5px black;
+}
+.role-button {
+    padding: 10px;
+    font-size: 16px;
+    border-color: rgb(10, 10, 10);
+    background-color: rgb(30, 30, 30);
+}
+.role-button:hover {
+    background-color:rgb(40, 40, 40);
+}
+.role-button:active {
+    background-color: rgb(20, 20, 20);
+}
+.role-button-beginner {
+    border-color: green;
+    background-color: rgb(33, 140, 33);
+}
+.role-button-beginner:hover {
+    background-color:rgb(47, 163, 47);
+}
+.role-button-beginner:active {
+    background-color: rgb(35, 124, 35);
+}
+
+.left-hard {
+    border-bottom-left-radius: 0px;
+    border-top-left-radius: 0px;
+}
+.right-hard {
+    border-bottom-right-radius: 0px;
+    border-top-right-radius: 0px;
+}
+.top-hard {
+    border-top-left-radius: 0px;
+    border-top-right-radius: 0px;
+    border-top-width: 1px;
+}
+.bottom-hard {
+    border-bottom-left-radius: 0px;
+    border-bottom-right-radius: 0px;
 }
