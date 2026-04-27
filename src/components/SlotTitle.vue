@@ -11,7 +11,7 @@ const props = defineProps<{
 	slot: SlotDefinition,
 }>()
 
-const memberCount = computed(() => (appStore.getRoomMembers(props.roomId)[props.slot.id] ?? []).length)
+const memberCount = computed(() => (appStore.getSlotCount(props.roomId, props.slot.id)))
 </script>
 
 <template>

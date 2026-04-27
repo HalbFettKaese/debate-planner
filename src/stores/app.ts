@@ -58,6 +58,16 @@ export const useAppStore = defineStore('app', {
                 result[slot].push(memberName)
             }
             return result
+        },
+        getSlotCount(state) {
+            return (room: string, slot: string) => {
+                const parents = this.getRoomMembers(room)[slot] ?? []
+                var count = parents.length
+                for (const parentName of parents) {
+                    count += this.members[parentName].children.length
+                }
+                return count
+            }
         }
     },
     actions: {
