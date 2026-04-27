@@ -115,6 +115,7 @@ export const useAppStore = defineStore('app', {
                 parent.children.push(grandchildName)
                 this.members[grandchildName].parent = parentName
             }
+            child.children = []
         },
         addRoom(index?: number) {
             if (index === undefined) {
