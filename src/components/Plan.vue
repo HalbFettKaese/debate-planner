@@ -5,6 +5,7 @@ import { useAppStore, type RoomDefinition } from '@/stores/app';
 import { useI18n } from 'vue-i18n';
 import RoomOptions from './RoomOptions.vue';
 import RoomActions from './RoomActions.vue';
+import SlotTitle from './SlotTitle.vue'
 
 const { t } = useI18n()
 
@@ -34,7 +35,8 @@ onMounted(() => {
                     :key="slot.id"
                 >
                     <div style="display:flex;flex-direction: row;">
-                        <h2 style="margin-left:5px;margin-top:0px;margin-bottom:0px;">{{ t(slot.id) }}</h2>
+                        <SlotTitle :roomId="room.id" :slot="slot" />
+                        
                         <RoomActions :roomId="room.id" :slotId="slot.id"></RoomActions>
                     </div>
                 </VCol>

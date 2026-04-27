@@ -180,6 +180,17 @@ export const useAppStore = defineStore('app', {
                 rootUnsorted += 1
             })
             this.rooms.splice(index, 1)
+        },
+        unlink(memberName: string) {
+            var parent = this.members[memberName]
+            if (parent.parent) {
+                memberName = parent.parent
+                parent = this.members[parent.parent]
+            }
+            const location = {...parent.location, index: parent.location.index + 1}
+            while (parent.children.length > 0) {
+                this.moveMember(parent.children[parent.children.length - 1], location)
+            }
         }
     }
 })

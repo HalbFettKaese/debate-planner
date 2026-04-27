@@ -29,6 +29,7 @@ const hidden = computed(() => props.memberName === appStore.dragging)
             close-icon="mdi-close"
             closable
             @click:close="appStore.deleteMember(memberName)"
+            @dblclick="appStore.unlink(memberName)"
         >
             {{ memberName }}
         </v-chip>
