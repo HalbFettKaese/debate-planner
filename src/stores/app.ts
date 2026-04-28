@@ -152,6 +152,12 @@ export const useAppStore = defineStore('app', {
             this.rooms[index] = { format, displayName, id: roomId, ...debateStyles[format] }
         },
         addMember(name: string, experienced: boolean) {
+            const baseName = name
+            var suffix = 2
+            while (this.members[name]) {
+                name = baseName + ' #' + suffix
+                suffix += 1
+            }
             const unsorted = this.getRoomMembers('rootUnsorted').unsorted ?? []
             this.members[name] = {
                 children: [],
