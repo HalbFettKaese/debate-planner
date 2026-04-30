@@ -45,7 +45,6 @@ const hidden = computed(() => props.memberName === appStore.dragging)
 <style scoped>
 .card {
     margin: 2px 2px 2px 0px;
-    
 }
 .new {
     background-color: rgb(var(--v-theme-green));

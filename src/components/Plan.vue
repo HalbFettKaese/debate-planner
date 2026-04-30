@@ -39,7 +39,7 @@ onMounted(() => {
                         <div>
                             <SlotTitle :roomId="room.id" :slot="slot" style="float:left;"/>
                             
-                            <RoomActions :roomId="room.id" :slotId="slot.id" style="float:right;"></RoomActions>
+                            <RoomActions :roomId="room.id" :slotId="slot.id" style="float:left;margin-left:10px;"></RoomActions>
                         </div>
                     </td>
                 </tr>
