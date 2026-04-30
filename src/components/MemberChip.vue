@@ -11,6 +11,8 @@ const props = defineProps<{
     dragover?: (event: DragEvent) => any,
 }>()
 
+const id = () => undefined
+
 const member = appStore.members[props.memberName]
 
 const dragStart = (event: DragEvent) => {
@@ -32,8 +34,8 @@ const hidden = computed(() => props.memberName === appStore.dragging)
             closable
             @click:close="appStore.deleteMember(memberName)"
             @dblclick="appStore.unlink(memberName)"
-            @drop="drop($event)"
-            @dragover="dragover($event)"
+            @drop="(drop ?? id)($event)"
+            @dragover="(dragover ?? id)($event)"
         >
             {{ memberName }}
         </v-chip>
