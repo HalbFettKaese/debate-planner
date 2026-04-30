@@ -7,6 +7,8 @@ const appStore = useAppStore()
 const props = defineProps<{
     memberName: string,
     maxWidth?: boolean,
+    drop?: (event: DragEvent) => any,
+    dragover?: (event: DragEvent) => any,
 }>()
 
 const member = appStore.members[props.memberName]
@@ -30,6 +32,8 @@ const hidden = computed(() => props.memberName === appStore.dragging)
             closable
             @click:close="appStore.deleteMember(memberName)"
             @dblclick="appStore.unlink(memberName)"
+            @drop="drop($event)"
+            @dragover="dragover($event)"
         >
             {{ memberName }}
         </v-chip>

@@ -45,8 +45,8 @@ function drop(event: DragEvent){
     <MemberChip
         v-else-if="children.length === 0"
         :member-name="memberName"
-        @drop="drop($event)"
-        @dragover="dragover($event)"
+        :drop="drop"
+        :dragover="dragover"
     ></MemberChip>
     <v-sheet
         v-else
