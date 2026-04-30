@@ -73,12 +73,11 @@ function dragleave(event: DragEvent) {
 </script>
 
 <template>
-    <VCol
+    <td
         @dragleave="dragleave($event)"
         @dragover="dragover($event)"
         @drop="drop($event)"
     >
-        <v-divider></v-divider>
         <div
             class="card-container"
             ref="container"
@@ -91,7 +90,7 @@ function dragleave(event: DragEvent) {
             ></MemberParty>
             <CreateChip v-if="roomId === 'rootUnsorted'"></CreateChip>
         </div>
-    </VCol>
+    </td>
 </template>
 
 <style scoped>

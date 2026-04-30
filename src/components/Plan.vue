@@ -26,30 +26,41 @@ onMounted(() => {
         style="display: flex; flex-direction: row;"
     >
         <RoomOptions :roomId="room.id"></RoomOptions>
-        <VTable
-            class="room"
-        >
-            <VRow>
-                <VCol
-                    v-for="slot of room.slots"
-                    :key="slot.id"
-                >
-                    <div style="display:flex;flex-direction: row;">
-                        <SlotTitle :roomId="room.id" :slot="slot" />
-                        
-                        <RoomActions :roomId="room.id" :slotId="slot.id"></RoomActions>
-                    </div>
-                </VCol>
-            </VRow>
-            <VRow style="margin-top:5px;">
-                <MemberSlot
-                    v-for="slot of room.slots"
-                    :roomId="room.id"
-                    :slotId="slot.id"
-                    :memberNames="appStore.getRoomMembers(room.id)[slot.id] ?? []"
-                ></MemberSlot>
-            </VRow>
-        </VTable>
+        <v-sheet class="room">
+            <table
+                style="table-layout: fixed;width:100%; column-gap:20px;"
+            >
+                <thead>
+                <tr>
+                    <td
+                        v-for="slot of room.slots"
+                        :key="slot.id"
+                    >
+                        <div>
+                            <SlotTitle :roomId="room.id" :slot="slot" style="float:left;"/>
+                            
+                            <RoomActions :roomId="room.id" :slotId="slot.id" style="float:right;"></RoomActions>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td v-for="slot of room.slots" :key="slot.id">
+                        <v-divider></v-divider>
+                    </td>
+                </tr>
+                </thead>
+                <tbody>
+                <tr style="margin-top:5px;">
+                    <MemberSlot
+                        v-for="slot of room.slots"
+                        :roomId="room.id"
+                        :slotId="slot.id"
+                        :memberNames="appStore.getRoomMembers(room.id)[slot.id] ?? []"
+                    ></MemberSlot>
+                </tr>
+                </tbody>
+            </table>
+        </v-sheet>
     </div>
 </template>
 
@@ -60,5 +71,10 @@ onMounted(() => {
     box-shadow: 0px 1px 2px 0px rgba(var(--v-shadow-color), var(--v-shadow-key-opacity, 0.3)), 0px 2px 6px 2px rgba(var(--v-shadow-color), var(--v-shadow-ambient-opacity, 0.15));
     border-radius: 20px;
     width: 100%;
+}
+
+td {
+    padding-right: 5px;
+    padding-left: 5px;
 }
 </style>

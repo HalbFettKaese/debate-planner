@@ -40,7 +40,7 @@ function retrieve() {
 <template>
     <div
         v-if="slotId === 'unsorted'"
-        style="margin-left:30px;display:flex; flex-direction: row;"
+        style="display:flex; flex-direction: row;"
     >
         <v-btn
             icon
