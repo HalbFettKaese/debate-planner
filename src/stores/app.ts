@@ -1,4 +1,5 @@
 import { debateStyles } from '@/config/debatestyles';
+import { toRomanNumerals } from '@/util/roman';
 import { defineStore } from 'pinia';
 
 export type MemberLocation = {
@@ -153,10 +154,10 @@ export const useAppStore = defineStore('app', {
         },
         addMember(name: string, experienced: boolean) {
             const baseName = name
-            var suffix = 2
+            var suffix = 1
             while (this.members[name]) {
-                name = baseName + ' #' + suffix
                 suffix += 1
+                name = baseName + ' ' + toRomanNumerals(suffix) + '.'
             }
             const unsorted = this.getRoomMembers('rootUnsorted').unsorted ?? []
             this.members[name] = {
