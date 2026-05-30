@@ -21,7 +21,7 @@ export function shuffleSubsequence<T>(list: T[], startIdx?: number, endIdx?: num
     }
 }
 
-export function pickRandom<T>(list: T[]): T | undefined {
+export function getRandom<T>(list: T[]): T | undefined {
     const idx = Math.floor(Math.random() * list.length)
     return list[idx]
 }

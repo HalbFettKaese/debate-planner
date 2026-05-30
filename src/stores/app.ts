@@ -18,6 +18,7 @@ export type RoomDefinition = {
     format: keyof typeof debateStyles,
     slots: SlotDefinition[],
     slotSize: number,
+    juryCount: number,
     id: string,
     displayName: string,
 }
@@ -35,10 +36,7 @@ export const useAppStore = defineStore('app', {
         }>,
         rooms: [
             {
-                slots: [{
-                    free: false,
-                    id: "unsorted"
-                }],
+                slots: [] as SlotDefinition[],
                 slotSize: 0,
                 id: "rootUnsorted"
             }
@@ -139,18 +137,18 @@ export const useAppStore = defineStore('app', {
             this.roomCounter += 1
             const roomTemplate = debateStyles[format]
             const id = this.roomCounter.toString()
-            return { format, id, displayName: '', ...roomTemplate }
+            return { format, id, displayName: '', juryCount: 1, ...roomTemplate }
         },
         setRoomType(index: number, format: DebateFormat) {
             const roomId = this.rooms[index].id
-            const displayName = this.rooms[index].displayName
+            const { displayName, juryCount } = this.rooms[index]
             const members = Object.values(this.getRoomMembers(roomId)).flat(1)
             for (const member of members) {
                 const location = {...this.members[member].location}
                 location.slot = "unsorted"
                 this.moveMember(member, location)
             }
-            this.rooms[index] = { format, displayName, id: roomId, ...debateStyles[format] }
+            this.rooms[index] = { format, displayName, juryCount, id: roomId, ...debateStyles[format] }
         },
         addMember(name: string, experienced: boolean) {
             const baseName = name
@@ -197,6 +195,19 @@ export const useAppStore = defineStore('app', {
                 rootUnsorted += 1
             })
             this.rooms.splice(index, 1)
+            if (this.rooms.length === 2) {
+                for (const slotId of ['unsorted', 'unsortedJury']) {
+                    const roomUnsorted = this.getRoomMembers(this.rooms[0].id)[slotId] ?? []
+                    for (const movedMember of roomUnsorted) {
+                        this.moveMember(movedMember, {
+                            room: 'rootUnsorted',
+                            slot: slotId,
+                            index: rootUnsorted
+                        })
+                        rootUnsorted += 1
+                    }
+                }
+            }
         },
         unlink(memberName: string) {
             var parent = this.members[memberName]

@@ -70,6 +70,8 @@ function dragleave(event: DragEvent) {
     placeholderIdx.value = undefined
 }
 
+const isUnsortedJury = props.slotId === 'unsortedJury'
+
 </script>
 
 <template>
@@ -88,7 +90,7 @@ function dragleave(event: DragEvent) {
                 :key="memberName"
                 :memberName="memberName ?? 'placeholder'"
             ></MemberParty>
-            <CreateChip v-if="roomId === 'rootUnsorted'"></CreateChip>
+            <CreateChip v-if="roomId === 'rootUnsorted' && slotId === 'unsorted'"></CreateChip>
         </div>
     </td>
 </template>

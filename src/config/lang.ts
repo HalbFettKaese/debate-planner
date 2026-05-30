@@ -28,6 +28,8 @@ export const languages = {
         room_name_placeholder: "Room ",
         label_group_size: "Group Size",
         label_debate_style: "Debate Style",
+        label_jury_count: "Jury Count",
+        unsortedJury: "Potential Jury"
     },
     de: {
         nativeName: "Deutsch",
@@ -58,5 +60,7 @@ export const languages = {
         room_name_placeholder: "Raum ",
         label_group_size: "Gruppengröße",
         label_debate_style: "Debattenstil",
+        label_jury_count: "Anzahl Jury",
+        unsortedJury: "Mögliche Jury",
     },
 } as const satisfies Record<string, Record<string, string>>

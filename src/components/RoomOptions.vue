@@ -42,6 +42,13 @@ const debateStyle = defineModel({
             hide-details
         ></v-select>
         <v-select
+            :label="t('label_jury_count')"
+            v-model="room.juryCount"
+            :items="[1, 2, 3, 4]"
+            density="compact"
+            hide-details
+        ></v-select>
+        <v-select
             :label="t('label_debate_style')"
             v-model="debateStyle"
             :items="Object.keys(debateStyles).map(s => ({

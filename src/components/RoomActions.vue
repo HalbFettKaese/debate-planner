@@ -20,7 +20,11 @@ function retrieve() {
         for (const memberName of Object.keys(appStore.members)) {
             const member = appStore.members[memberName]
             if (member.parent || (member.location.room === 'rootUnsorted')) continue
-            appStore.moveMember(memberName, {...location, index: count})
+            appStore.moveMember(memberName, {
+                room: props.roomId,
+                slot: member.location.slot === 'jury' ? 'unsortedJury' : props.slotId,
+                index: count
+            })
             count += 1
         }
         return
@@ -29,8 +33,13 @@ function retrieve() {
     for (const slotName of Object.keys(slots)) {
         if (slotName === props.slotId) continue
         for (const memberName of slots[slotName]) {
-            if (appStore.members[memberName].parent) continue
-            appStore.moveMember(memberName, {...location, index: count})
+            const member = appStore.members[memberName]
+            if (member.parent) continue
+            appStore.moveMember(memberName, {
+                room: props.roomId,
+                slot: member.location.slot === 'jury' ? 'unsortedJury' : props.slotId,
+                index: count
+            })
             count += 1
         }
     }
@@ -52,7 +61,7 @@ function retrieve() {
             <v-tooltip activator="parent" location="bottom">{{ t('tooltipRetrieve') }}</v-tooltip>
         </v-btn>
         <v-btn
-            v-if="rootUnsorted"
+            v-if="rootUnsorted && appStore.rooms.length > 2"
             class="spacing"
             icon
             density="comfortable"
